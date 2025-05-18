@@ -1,4 +1,146 @@
+// Theme functionality
+const themeToggle = document.getElementById('theme-toggle');
+const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+// Function to set theme
+function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+}
+
+// Check for saved theme preference or use device preference
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+    setTheme(savedTheme);
+} else if (prefersDarkScheme.matches) {
+    setTheme('dark');
+}
+
+// Toggle theme when button is clicked
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        // Apply subtle animation to the toggle
+        themeToggle.style.animation = 'subtlePulse 0.5s ease-in-out';
+        setTimeout(() => {
+            themeToggle.style.animation = '';
+        }, 500);
+        
+        setTheme(newTheme);
+    });
+}
+
+// Page loading functionality
+window.addEventListener('load', function() {
+    // Hide loader after page is fully loaded
+    setTimeout(function() {
+        document.querySelector('.page-loader').classList.add('loaded');
+        document.body.classList.add('loaded');
+    }, 500); // Small delay for smoother transition
+    
+    // Initialize AOS (Animate On Scroll) with subtle settings
+    AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true,
+        offset: 50,
+        disable: 'mobile' // Disable on mobile for better performance
+    });
+    
+    // Add micro-interactions to buttons
+    addMicroInteractions();
+});
+
+// Function to add micro-interactions to elements
+function addMicroInteractions() {
+    // Add subtle hover effects to buttons
+    const buttons = document.querySelectorAll('.cta-button, #theme-toggle, .carousel-button, .slider-prev, .slider-next');
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.style.animation = 'subtlePulse 0.5s ease-in-out';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.style.animation = '';
+        });
+    });
+    
+    // Add subtle interactions to cards
+    const cards = document.querySelectorAll('.feature, .service-card, .portfolio-item, .audience-item, .process-step');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.animation = 'subtleGlow 2s infinite';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.animation = '';
+        });
+    });
+}
+
+// Cross-browser compatibility helper
+var isIE = !!document.documentMode;
+var isEdge = !isIE && !!window.StyleMedia;
+var isOldBrowser = isIE || isEdge;
+
+// Polyfill for Element.closest for IE
+if (!Element.prototype.matches) {
+    Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+}
+
+if (!Element.prototype.closest) {
+    Element.prototype.closest = function(s) {
+        var el = this;
+        do {
+            if (el.matches(s)) return el;
+            el = el.parentElement || el.parentNode;
+        } while (el !== null && el.nodeType === 1);
+        return null;
+    };
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Typing animation
+    const texts = [
+        'Affordable one-page websites for small businesses.',
+        'Get a beautiful, high-converting landing page.',
+        'Quick turnaround with mobile-first design.',
+        'Stand out online and convert visitors into customers.',
+        'Affordable one-page websites for small businesses. Get a beautiful, high-converting landing page with quick turnaround and mobile-first design.'
+    ];
+    const typingText = document.querySelector('.typing-text');
+    let textIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    
+    function type() {
+        const currentText = texts[textIndex];
+        
+        if (isDeleting) {
+            typingText.textContent = currentText.substring(0, charIndex - 1);
+            charIndex--;
+        } else {
+            typingText.textContent = currentText.substring(0, charIndex + 1);
+            charIndex++;
+        }
+        
+        let typeSpeed = isDeleting ? 30 : 50;
+        
+        if (!isDeleting && charIndex === currentText.length) {
+            typeSpeed = 2000; // Pause at end
+            isDeleting = true;
+        } else if (isDeleting && charIndex === 0) {
+            textIndex = (textIndex + 1) % texts.length;
+            isDeleting = false;
+            typeSpeed = 500; // Pause before starting new text
+        }
+        
+        setTimeout(type, typeSpeed);
+    }
+    
+    setTimeout(type, 1000); // Start after 1 second
     // Read More Button for About Section
     const readMoreBtn = document.querySelector('.read-more-btn');
     const expandableText = document.querySelector('.about-text-expandable');
@@ -9,6 +151,62 @@ document.addEventListener('DOMContentLoaded', function() {
             this.textContent = expandableText.classList.contains('expanded') ? 'Read Less' : 'Read More';
         });
     }
+    
+    // Case Study Video Functionality
+    const videoButtons = document.querySelectorAll('.case-study-video-btn');
+    const videoContainers = document.querySelectorAll('.case-study-video-container');
+    const closeButtons = document.querySelectorAll('.close-video');
+    
+    // Open video modal when button is clicked
+    videoButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const videoId = this.getAttribute('data-video');
+            const videoContainer = document.getElementById(videoId);
+            if (videoContainer) {
+                videoContainer.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+                
+                // Start playing the video
+                const video = videoContainer.querySelector('video');
+                if (video) {
+                    video.play();
+                }
+            }
+        });
+    });
+    
+    // Close video modal when close button is clicked
+    closeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const videoContainer = this.closest('.case-study-video-container');
+            if (videoContainer) {
+                videoContainer.classList.remove('active');
+                document.body.style.overflow = ''; // Restore scrolling
+                
+                // Pause the video
+                const video = videoContainer.querySelector('video');
+                if (video) {
+                    video.pause();
+                }
+            }
+        });
+    });
+    
+    // Close video modal when clicking outside the video
+    videoContainers.forEach(container => {
+        container.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+                document.body.style.overflow = ''; // Restore scrolling
+                
+                // Pause the video
+                const video = this.querySelector('video');
+                if (video) {
+                    video.pause();
+                }
+            }
+        });
+    });
     
     // Mobile Carousel Functionality
     function initCarousels() {
@@ -200,6 +398,51 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Scroll Progress Indicator
+    const scrollProgress = document.querySelector('.scroll-progress');
+    
+    window.addEventListener('scroll', () => {
+        // Calculate scroll progress percentage
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrollPercent = (scrollTop / scrollHeight) * 100;
+        
+        // Update progress bar width
+        scrollProgress.style.width = scrollPercent + '%';
+        
+        // Update active nav link based on scroll position
+        updateActiveNavLink();
+    });
+    
+    // Function to update active nav link based on scroll position
+    function updateActiveNavLink() {
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-links a');
+        
+        // Get current scroll position with a small offset
+        const scrollPosition = window.scrollY + 100;
+        
+        // Find the current active section
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            const sectionId = section.getAttribute('id');
+            
+            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                // Remove active class from all links
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                });
+                
+                // Add active class to current section link
+                const currentLink = document.querySelector(`.nav-links a[href="#${sectionId}"]`);
+                if (currentLink) {
+                    currentLink.classList.add('active');
+                }
+            }
+        });
+    }
+    
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
@@ -220,8 +463,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Modal functionality
     const modal = document.getElementById('booking-modal');
-    const closeModal = document.querySelector('.close-modal');
+    const closeModalBtn = document.querySelector('.close-modal');
     const openModalButtons = document.querySelectorAll('.open-modal');
+    
+    // Make sure the close button exists and add the event listener
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', function() {
+            closeModalFunc();
+        });
+    }
     
     // Function to open modal
     function openModalFunc() {
@@ -268,7 +518,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Event listeners for closing modal
-    closeModal.addEventListener('click', closeModalFunc);
+    // Event listener for clicking outside the modal to close it
     
     window.addEventListener('click', function(e) {
         if (e.target === modal) {
@@ -287,51 +537,118 @@ document.addEventListener('DOMContentLoaded', function() {
     const bookingForm = document.getElementById('booking-form');
     const whatsappSubmit = document.getElementById('whatsapp-submit');
     
+    // Function to remove the osadam.com popup
+    function removeOsadamPopup() {
+        // Look for the specific popup shown in the screenshot
+        const popups = document.querySelectorAll('div');
+        popups.forEach(popup => {
+            // Check if this popup matches the one in the screenshot
+            if (popup.style.position === 'fixed' && 
+                popup.textContent && 
+                popup.textContent.includes('osadam.com') && 
+                popup.textContent.includes('Please fill in all required fields')) {
+                
+                // Try to find and click the OK button
+                const buttons = popup.querySelectorAll('button');
+                if (buttons.length > 0) {
+                    // Click the OK button (usually the last button)
+                    buttons[buttons.length - 1].click();
+                } else {
+                    // If no button found, just remove the popup
+                    popup.remove();
+                }
+            }
+        });
+    }
+    
     // WhatsApp submit button
     if (whatsappSubmit) {
-        whatsappSubmit.addEventListener('click', function() {
-            // Get form values
-            const fullName = document.getElementById('fullName').value || '';
-            const email = document.getElementById('email').value || '';
-            const businessName = document.getElementById('businessName').value || '';
-            const websiteGoal = document.getElementById('websiteGoal').value || '';
-            const budget = document.getElementById('budget').value || 'Not specified';
-            const timeline = document.getElementById('timeline').value || '';
-            const message = document.getElementById('message').value || 'No additional details';
+        whatsappSubmit.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Remove any existing validation messages first
+            const existingMessages = document.querySelectorAll('.validation-message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            // Get form values and trim whitespace
+            const fullName = document.getElementById('fullName')?.value?.trim() || '';
+            const email = document.getElementById('email')?.value?.trim() || '';
+            const businessName = document.getElementById('businessName')?.value?.trim() || '';
+            const websiteGoal = document.getElementById('websiteGoal')?.value?.trim() || '';
+            const budget = document.getElementById('budget')?.value?.trim() || 'Not specified';
+            const timeline = document.getElementById('timeline')?.value?.trim() || '';
+            const message = document.getElementById('message')?.value?.trim() || 'No additional details';
             
             // Validate required fields
-            if (!fullName || !email || !businessName || !websiteGoal || !timeline) {
-                alert('Please fill in all required fields before sending to WhatsApp');
+            const requiredFields = [
+                { id: 'fullName', value: fullName, label: 'Full Name' },
+                { id: 'email', value: email, label: 'Email' },
+                { id: 'businessName', value: businessName, label: 'Business Name' },
+                { id: 'websiteGoal', value: websiteGoal, label: 'Website Goal' },
+                { id: 'timeline', value: timeline, label: 'Timeline' }
+            ];
+            
+            const missingFields = requiredFields.filter(field => !field.value);
+            
+            if (missingFields.length > 0) {
+                const validationDiv = document.createElement('div');
+                validationDiv.className = 'validation-message';
+                validationDiv.innerHTML = `
+                    <p>Please fill in the following required fields:</p>
+                    <ul>
+                        ${missingFields.map(field => `<li>${field.label}</li>`).join('')}
+                    </ul>
+                `;
+                validationDiv.style.color = '#ff3860';
+                validationDiv.style.marginBottom = '15px';
+                validationDiv.style.textAlign = 'left';
+                
+                const formButtons = document.querySelector('.form-buttons');
+                if (formButtons) {
+                    formButtons.parentNode.insertBefore(validationDiv, formButtons);
+                }
                 return;
             }
             
-            // Create WhatsApp message
-            let whatsappMessage = `Hello Sarah, I'm interested in your web design services.
-
-`;
-            whatsappMessage += `Name: ${fullName}
-`;
-            whatsappMessage += `Email: ${email}
-`;
-            whatsappMessage += `Business: ${businessName}
-`;
-            whatsappMessage += `Website Goal: ${websiteGoal}
-`;
-            whatsappMessage += `Budget: ${budget}
-`;
-            whatsappMessage += `Timeline: ${timeline}
-`;
-            whatsappMessage += `Message: ${message}`;
-            
-            // Encode the message for URL
-            const encodedMessage = encodeURIComponent(whatsappMessage);
-            
-            // Open WhatsApp with pre-filled message
-            window.open(`https://wa.me/2348084077486?text=${encodedMessage}`, '_blank');
-            
-            // Reset the form and close modal
-            bookingForm.reset();
-            closeModalFunc();
+            try {
+                // Format WhatsApp message with proper line breaks
+                const whatsappMessage = [
+                    "Hello Sarah, I'm interested in your web design services.",
+                    "",
+                    `Name: ${fullName}`,
+                    `Email: ${email}`,
+                    `Business: ${businessName}`,
+                    `Website Goal: ${websiteGoal}`,
+                    `Budget: ${budget}`,
+                    `Timeline: ${timeline}`,
+                    "",
+                    `Additional Details: ${message}`
+                ].join('\n');
+                
+                // Encode the message for URL
+                const encodedMessage = encodeURIComponent(whatsappMessage);
+                
+                // Open WhatsApp in new tab
+                window.open(`https://wa.me/2348084077486?text=${encodedMessage}`, '_blank');
+                
+                // Reset form and close modal
+                bookingForm.reset();
+                closeModalFunc();
+                
+            } catch (error) {
+                console.error('Error sending message:', error);
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'validation-message error';
+                errorDiv.textContent = 'Sorry, there was an error sending your message. Please try again or contact us directly.';
+                errorDiv.style.color = '#ff3860';
+                errorDiv.style.marginBottom = '15px';
+                errorDiv.style.textAlign = 'center';
+                
+                const formButtons = document.querySelector('.form-buttons');
+                if (formButtons) {
+                    formButtons.parentNode.insertBefore(errorDiv, formButtons);
+                }
+            }
         });
     }
     
@@ -339,47 +656,84 @@ document.addEventListener('DOMContentLoaded', function() {
     const contactForm = document.querySelector('.contact-form');
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
+            // Don't prevent default - let the form submit naturally to the mailto: handler
             
-            // Get form values
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
+            // Get form values for validation
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const message = document.getElementById('message').value.trim();
             
-            // Here you would typically send the form data to a server
-            // For now, we'll just show an alert
-            alert(`Thank you, ${name}! Your message has been received. I'll get back to you soon at ${email}.`);
-            
-            // Reset the form
-            contactForm.reset();
-        });
-    }
-
-    // Reveal animations on scroll
-    const revealElements = document.querySelectorAll('.feature, .service-card, .portfolio-item, .audience-item, .process-step');
-    
-    function checkReveal() {
-        const windowHeight = window.innerHeight;
-        const revealPoint = 150;
-        
-        revealElements.forEach(element => {
-            const revealTop = element.getBoundingClientRect().top;
-            
-            if (revealTop < windowHeight - revealPoint) {
-                element.style.opacity = '1';
-                element.style.transform = 'translateY(0)';
+            // Validate required fields
+            if (!name || !email || !message) {
+                e.preventDefault(); // Prevent submission if validation fails
+                
+                // Remove any existing validation messages
+                const existingMessages = contactForm.querySelectorAll('.validation-message');
+                existingMessages.forEach(msg => msg.remove());
+                
+                const validationDiv = document.createElement('div');
+                validationDiv.className = 'validation-message';
+                validationDiv.innerHTML = `
+                    <p>Please fill in all required fields:</p>
+                    <ul>
+                        ${!name ? '<li>Name</li>' : ''}
+                        ${!email ? '<li>Email</li>' : ''}
+                        ${!message ? '<li>Message</li>' : ''}
+                    </ul>
+                `;
+                validationDiv.style.color = '#ff3860';
+                validationDiv.style.marginBottom = '15px';
+                validationDiv.style.textAlign = 'left';
+                
+                const submitButton = contactForm.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    submitButton.parentNode.insertBefore(validationDiv, submitButton);
+                }
+                return;
             }
+            
+            // If validation passes, the form will submit naturally to the mailto: handler
+            // This will open the user's default email client with a pre-filled email
+            
+            // Show a helpful message after successful submission
+            setTimeout(() => {
+                const successDiv = document.createElement('div');
+                successDiv.className = 'validation-message success';
+                successDiv.textContent = 'Opening your email client...';
+                successDiv.style.color = '#00c853';
+                successDiv.style.marginBottom = '15px';
+                successDiv.style.textAlign = 'center';
+                
+                const submitButton = contactForm.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    submitButton.parentNode.insertBefore(successDiv, submitButton);
+                }
+                
+                // Remove the message after 5 seconds
+                setTimeout(() => {
+                    successDiv.remove();
+                }, 5000);
+            }, 100);
         });
     }
     
-    // Add CSS class for animation
-    revealElements.forEach(element => {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(30px)';
-        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    // FAQ Functionality
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        
+        question.addEventListener('click', () => {
+            // Close all other items
+            faqItems.forEach(otherItem => {
+                if (otherItem !== item && otherItem.classList.contains('active')) {
+                    otherItem.classList.remove('active');
+                }
+            });
+            
+            // Toggle current item
+            item.classList.toggle('active');
+        });
     });
     
-    // Check on load and scroll
-    window.addEventListener('scroll', checkReveal);
-    window.addEventListener('load', checkReveal);
 });

@@ -3,15 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Osadam | Web Development for Small Businesses</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="theme-color" content="#bc00cd">
+    <title>Osadam Web Development| Get a beautiful, high-converting landing page</title>
+    <meta name="description" content="Affordable one-page websites for small businesses. Get a beautiful, high-converting landing page with quick turnaround and mobile-first design.">
+    <meta name="keywords" content="web development, small business website, landing page, one-page website, affordable website, mobile-first design, Nigeria">
+    <meta name="author" content="Sarah Oladiran">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://osadam.com/">
+    <meta property="og:title" content="Osadam Web Development| Get a beautiful, high-converting landing page">
+    <meta property="og:description" content="Affordable one-page websites for small businesses. Get a beautiful, high-converting landing page with quick turnaround and mobile-first design.">
+    <meta property="og:image" content="images/Logo.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://osadam.com/">
+    <meta property="twitter:title" content="Osadam Web Development| Get a beautiful, high-converting landing page">
+    <meta property="twitter:description" content="Affordable one-page websites for small businesses. Get a beautiful, high-converting landing page with quick turnaround and mobile-first design.">
+    <meta property="twitter:image" content="images/Logo.jpg">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://osadam.com/">
+    
+    <!-- Structured Data / JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "Osadam",
+      "image": "images/Logo.jpg",
+      "@id": "https://osadam.com",
+      "url": "https://osadam.com",
+      "telephone": "+2348084077486",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "Nigeria"
+      },
+      "geo": {
+        "@type": "GeoCoordinates"
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday"
+        ],
+        "opens": "09:00",
+        "closes": "17:00"
+      },
+      "sameAs": [
+        "https://instagram.com/osadam_25"
+      ],
+      "priceRange": "₦₦-₦₦₦",
+      "description": "Affordable one-page websites for small businesses. Get a beautiful, high-converting landing page with quick turnaround and mobile-first design.",
+      "founder": {
+        "@type": "Person",
+        "name": "Sarah Oladiran"
+      }
+    }
+    </script>
+    
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="baseStyles.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="responsive.css">
     <link rel="icon" href="favicon/favicon.ico">
+    <!-- Loading animation styles -->
+    <style>
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(188, 0, 205, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .page-loader.loaded {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        body {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        body.loaded {
+            opacity: 1;
+        }
+    </style>
 </head>
 <body>
+    <!-- Page Loader -->
+    <div class="page-loader">
+        <div class="loader"></div>
+    </div>
+    
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress"></div>
+
     <header>
         <div class="container">
             <nav>
@@ -22,12 +142,18 @@
                     </a>
                 </div>
                 <ul class="nav-links">
-                    <li><a href="#why-me">Why Me</a></li>
                     <li><a href="#about">About</a></li>
+                    <li><a href="#why-me">Why Me</a></li>
                     <li><a href="#how-it-works">How It Works</a></li>
                     <li><a href="#services">Services</a></li>
                     <li><a href="#portfolio">Portfolio</a></li>
                     <li><a href="#who-its-for">Who It's For</a></li>
+                    <li class="theme-toggle-wrapper">
+                        <button id="theme-toggle" aria-label="Toggle dark mode">
+                            <i class="fa fa-moon-o dark-icon" aria-hidden="true"></i>
+                            <i class="fa fa-sun-o light-icon" aria-hidden="true"></i>
+                        </button>
+                    </li>
                     <li><a href="#contact" class="cta-button">Contact</a></li>
                 </ul>
                 <div class="hamburger">
@@ -40,23 +166,27 @@
     </header>
 
     <section id="hero" class="hero">
+        <div class="hero-background">
+            <img src="images/hero-bg.jpg" alt="Website Design Process">
+            <div class="overlay"></div>
+        </div>
         <div class="container">
-            <div class="hero-content">
-                <h1>One page. One purpose. One powerful online presence.</h1>
-                <p>I help small business owners create clean, high-converting landing pages that drive results for your business.</p>
-                <a href="#contact" class="cta-button">Let's Build Yours</a>
+            <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
+                <h1>One page. One purpose. One powerful<span class="highlight"> online presence.</span></h1>
+                <p class="typing-text"></p>
+                <a href="#contact" class="cta-button" aria-label="Contact me to build your website">Let's Build Yours</a>
             </div>
         </div>
     </section>
 
     <section id="about" class="about">
         <div class="container">
-            <h2>Meet Sarah Oladiran</h2>
+            <h2 data-aos="fade-up" data-aos-duration="800">Meet Sarah Oladiran</h2>
             <div class="about-content">
-                <div class="about-image">
-                    <img src="images/profile.jpg" alt="Sarah Oladiran">
+                <div class="about-image" data-aos="fade-right" data-aos-duration="800" data-aos-delay="100">
+                    <img src="images/profile.jpg" alt="Sarah Oladiran - Web Developer and Designer at Osadam" loading="lazy">
                 </div>
-                <div class="about-text">
+                <div class="about-text" data-aos="fade-left" data-aos-duration="800" data-aos-delay="200">
                     <p>Hi, I'm Sarah, a web developer and designer passionate about helping small businesses thrive online. I specialize in creating one-page websites that are beautiful, functional, and totally YOU.</p>
                     <div class="about-text-expandable">
                         <p>With a focus on clean design and user experience, I help entrepreneurs establish their online presence quickly and affordably. My background in marketing helps me create websites that not only look good but also convert visitors into customers.</p>
@@ -74,22 +204,22 @@
                 <p>I create beautiful, effective websites that help small businesses stand out online and convert visitors into customers.</p>
             </div>
             <div class="features">
-                <div class="feature">
+                <div class="feature" data-aos="fade-up" data-aos-delay="100">
                     <i class="fa fa-clock-o" aria-hidden="true"></i>
                     <h3>Quick Turnaround</h3>
                     <p>Get your site up and running in just 3–5 days, not weeks or months like traditional agencies.</p>
                 </div>
-                <div class="feature">
+                <div class="feature" data-aos="fade-up" data-aos-delay="200">
                     <i class="fa fa-mobile" aria-hidden="true"></i>
                     <h3>Mobile-First Design</h3>
                     <p>Your site will look perfect on all devices, from smartphones to desktops, ensuring no customer is left behind.</p>
                 </div>
-                <div class="feature">
+                <div class="feature" data-aos="fade-up" data-aos-delay="300">
                     <i class="fa fa-paint-brush" aria-hidden="true"></i>
                     <h3>Brand Focused</h3>
                     <p>Every design is tailored to match your unique brand voice, colors, and personality to create a cohesive experience.</p>
                 </div>
-                <div class="feature">
+                <div class="feature" data-aos="fade-up" data-aos-delay="400">
                     <i class="fa fa-bullseye" aria-hidden="true"></i>
                     <h3>Results Driven</h3>
                     <p>Built with your specific goals in mind, whether that's generating leads, booking appointments, or making sales.</p>
@@ -100,8 +230,8 @@
 
     <section id="how-it-works" class="how-it-works">
         <div class="container">
-            <h2>How It Works</h2>
-            <div class="process-steps">
+            <h2 data-aos="fade-up" data-aos-duration="800">How It Works</h2>
+            <div class="process-steps" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
                 <div class="process-step">
                     <div class="step-icon"><i class="fa fa-comments"></i></div>
                     <h3>Discovery Chat</h3>
@@ -128,8 +258,8 @@
 
     <section id="services" class="services">
         <div class="container">
-            <h2>My Services</h2>
-            <div class="service-cards">
+            <h2 data-aos="fade-up" data-aos-duration="800">My Services</h2>
+            <div class="service-cards" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
                 <div class="service-card">
                     <h3>Standard Package</h3>
                     <ul>
@@ -174,8 +304,9 @@
 
     <section id="portfolio" class="portfolio">
         <div class="container">
-            <h2>Portfolio</h2>
-            <div class="portfolio-grid">   
+            <h2 data-aos="fade-up" data-aos-duration="800">Portfolio</h2>
+            
+            <div class="portfolio-grid" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">   
                 <div class="portfolio-item">
                     <a href="https://osadam.com" target="_blank">
                         <img src="images/osadam.jpeg" alt="Osadam">
@@ -186,8 +317,8 @@
                     </a>
                 </div>
                 <div class="portfolio-item">
-                    <a href="https://infolearninghub.com" target="_blank">
-                        <img src="images/infolearninghub.jpeg" alt="Info Learning Hub">
+                    <a href="https://infolearninghub.com" target="_blank" rel="noopener" aria-label="View Info Learning Hub project">
+                        <img src="images/infolearninghub.jpeg" alt="Info Learning Hub - Educational Platform Website by Osadam" loading="lazy">
                         <div class="portfolio-overlay">
                             <h3>Info Learning Hub</h3>
                             <p>Educational Platform</p>
@@ -195,8 +326,8 @@
                     </a>
                 </div>
                 <div class="portfolio-item">
-                    <a href="https://osadam.tech" target="_blank">
-                        <img src="images/osadam.tech.jpeg" alt="Osadam Tech">
+                    <a href="https://osadam.tech" target="_blank" rel="noopener" aria-label="View Osadam Tech project">
+                        <img src="images/osadam.tech.jpeg" alt="Osadam Tech - Technology Services Website Design" loading="lazy">
                         <div class="portfolio-overlay">
                             <h3>Osadam Tech</h3>
                             <p>Technology Services</p>
@@ -204,17 +335,17 @@
                     </a>
                 </div>
                 <div class="portfolio-item">
-                    <a href="https://www.iamthebosslady.com" target="_blank">
-                        <img src="images/www.iamthebosslady.jpeg" alt="www.iamthebosslady.com">
+                    <a href="https://www.iamthebosslady.com" target="_blank" rel="noopener" aria-label="View I Am The Boss Lady project">
+                        <img src="images/www.iamthebosslady.jpeg" alt="I Am The Boss Lady - Personal Brand Website Design" loading="lazy">
                         <div class="portfolio-overlay">
-                            <h3>www.iamthebosslady.com</h3>
+                            <h3>I Am The Boss Lady</h3>
                             <p>Personal Brand</p>
                         </div>
                     </a>    
                 </div>  
                 <div class="portfolio-item">
-                    <a href="https://joruthe.com" target="_blank">
-                        <img src="images/joruthe.jpeg" alt="Joruthe">
+                    <a href="https://joruthe.com" target="_blank" rel="noopener" aria-label="View Joruthe project">
+                        <img src="images/joruthe.jpeg" alt="Joruthe - E-commerce Store Website Design" loading="lazy">
                         <div class="portfolio-overlay">
                             <h3>Joruthe</h3>
                             <p>E-commerce Store</p>
@@ -233,11 +364,44 @@
             </div>
         </div>
     </section>
+    
+    <section id="case-studies" class="case-studies">
+        <div class="container">
+            <h2 data-aos="fade-up" data-aos-duration="800">Featured Work</h2>
+            <div class="case-cards" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
+                <div class="case-card">
+                    <div class="case-video-preview">
+                        <video autoplay muted loop playsinline>
+                            <source src="images/case-studies-showing-process1.mp4" type="video/mp4">
+                        </video>
+                        <div class="case-overlay">
+                            <h3>Osadam.com</h3>
+                            <p>Web Service Provider</p>
+                            <span class="case-tag">Before & After</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="case-card">
+                    <div class="case-video-preview">
+                        <video autoplay muted loop playsinline>
+                            <source src="images/satisfiedclients1.mp4" type="video/mp4">
+                        </video>
+                        <div class="case-overlay">
+                            <h3>iamthebosslady.com</h3>
+                            <p>Skincare Consultation</p>
+                            <span class="case-tag">Client Testimonial</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <section id="who-its-for" class="who-its-for">
         <div class="container">
-            <h2>Who It's For</h2>
-            <div class="audience-grid">         
+            <h2 data-aos="fade-up" data-aos-duration="800">Who It's For</h2>
+            <div class="audience-grid" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">         
                 <div class="audience-item">
                     <i class="fa fa-shopping-bag" aria-hidden="true"></i>
                     <h3>Small Business Owners</h3>
@@ -262,10 +426,67 @@
         </div>
     </section>      
 
+    <section id="faq" class="faq">
+        <div class="container">
+            <h2 data-aos="fade-up" data-aos-duration="800">Frequently Asked Questions</h2>
+            <div class="faq-container" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How long does it take to build a one-page website?</h3>
+                        <span class="faq-toggle"><i class="fa fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Most one-page websites can be completed in 3-5 business days from the time I receive all your content and information. For more complex projects, it may take up to 7 days.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Do I need to provide all the content?</h3>
+                        <span class="faq-toggle"><i class="fa fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, you'll need to provide the text content and any specific images you want to use. However, I can help with basic content editing and can source stock photos if needed. I'll guide you through exactly what's needed during our initial consultation.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Can I update the website myself after it's built?</h3>
+                        <span class="faq-toggle"><i class="fa fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! I'll provide you with simple instructions on how to make basic updates to your site. For more complex changes, I offer affordable maintenance packages or can handle one-off updates as needed.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Will my website work on mobile phones?</h3>
+                        <span class="faq-toggle"><i class="fa fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely! All websites I build are fully responsive and mobile-friendly. They'll look great and function perfectly on smartphones, tablets, laptops, and desktop computers.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Do you offer website hosting?</h3>
+                        <span class="faq-toggle"><i class="fa fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, I can recommend affordable hosting options and help you set everything up. I'll ensure your domain is properly connected and your site is secure with an SSL certificate.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="contact" class="contact">
         <div class="container">
-            <h2>Let's Build Your Site!</h2>
-            <div class="contact-content">
+            <h2 data-aos="fade-up" data-aos-duration="800">Let's Build Your Site!</h2>
+            <div class="contact-content" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
                 <div class="contact-info">
                     <p>Send me a message or book a free consultation.</p>
                     <div class="contact-buttons">
@@ -283,23 +504,23 @@
                         </div>
                     </div>
                 </div>
-                <form class="contact-form" action="https://formspree.io/f/xrgwrjgp" method="POST">
+                <form class="contact-form" method="POST" action="mailto:info@osadam.com" enctype="text/plain" aria-label="Contact form" itemscope itemtype="https://schema.org/ContactPage">
                     <h3>Get Started</h3>
                     <p class="form-intro">Let's work together to create your perfect website</p>
                     
                     <div class="clean-form-group">
                         <label for="name">Your name</label>
-                        <input type="text" id="name" name="name" required>
+                        <input type="text" id="name" name="name" required autocomplete="name" aria-required="true" itemprop="name">
                     </div>
                     
                     <div class="clean-form-group">
                         <label for="email">Your email</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="email" required autocomplete="email" aria-required="true" itemprop="email">
                     </div>
                     
                     <div class="clean-form-group">
                         <label for="message">Message</label>
-                        <textarea id="message" name="message" rows="4" required></textarea>
+                        <textarea id="message" name="message" rows="3" required aria-required="true" itemprop="description"></textarea>
                     </div>
                     
                     <input type="hidden" name="_subject" value="New message from Osadam Website">
@@ -415,6 +636,9 @@
         </div>
     </div>
     
+    <!-- Polyfills for older browsers -->
+    <script src="https://cdn.jsdelivr.net/npm/core-js-bundle@3.30.2/minified.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
