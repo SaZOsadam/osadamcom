@@ -22,7 +22,7 @@
 
 .about-image img {
     box-shadow: var(--box-shadow);
-    border-radius: 24px;
+    border-radius: 50px;
 }
 
 .about-text {

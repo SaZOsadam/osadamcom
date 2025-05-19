@@ -152,61 +152,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Case Study Video Functionality
-    const videoButtons = document.querySelectorAll('.case-study-video-btn');
-    const videoContainers = document.querySelectorAll('.case-study-video-container');
-    const closeButtons = document.querySelectorAll('.close-video');
-    
-    // Open video modal when button is clicked
-    videoButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const videoId = this.getAttribute('data-video');
-            const videoContainer = document.getElementById(videoId);
-            if (videoContainer) {
-                videoContainer.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Prevent scrolling
-                
-                // Start playing the video
-                const video = videoContainer.querySelector('video');
-                if (video) {
-                    video.play();
-                }
-            }
-        });
-    });
-    
-    // Close video modal when close button is clicked
-    closeButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const videoContainer = this.closest('.case-study-video-container');
-            if (videoContainer) {
-                videoContainer.classList.remove('active');
-                document.body.style.overflow = ''; // Restore scrolling
-                
-                // Pause the video
-                const video = videoContainer.querySelector('video');
-                if (video) {
-                    video.pause();
-                }
-            }
-        });
-    });
-    
-    // Close video modal when clicking outside the video
-    videoContainers.forEach(container => {
-        container.addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.classList.remove('active');
-                document.body.style.overflow = ''; // Restore scrolling
-                
-                // Pause the video
-                const video = this.querySelector('video');
-                if (video) {
-                    video.pause();
-                }
-            }
-        });
-    });
     
     // Mobile Carousel Functionality
     function initCarousels() {
@@ -461,218 +406,253 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Modal functionality
-    const modal = document.getElementById('booking-modal');
-    const closeModalBtn = document.querySelector('.close-modal');
-    const openModalButtons = document.querySelectorAll('.open-modal');
-    
-    // Make sure the close button exists and add the event listener
-    if (closeModalBtn) {
-        closeModalBtn.addEventListener('click', function() {
-            closeModalFunc();
-        });
-    }
-    
-    // Function to open modal
-    function openModalFunc() {
+// Modal functionality
+const modal = document.getElementById('booking-modal');
+const closeModalBtn = document.querySelector('.close-modal');
+const openModalButtons = document.querySelectorAll('.open-modal');
+
+// Function to open modal
+function openModalFunc() {
+    if (modal) {
         modal.style.display = 'block';
-        // Trigger reflow before adding the show class for animation
-        modal.offsetWidth;
+        modal.offsetWidth; // Trigger reflow before adding the show class
         modal.classList.add('show');
         document.body.style.overflow = 'hidden'; // Prevent scrolling
     }
-    
-    // Function to close modal
-    function closeModalFunc() {
+}
+
+// Function to close modal
+function closeModalFunc() {
+    if (modal) {
         modal.classList.remove('show');
         setTimeout(function() {
             modal.style.display = 'none';
             document.body.style.overflow = ''; // Re-enable scrolling
         }, 300); // Match transition duration
     }
-    
-    // Add event listeners to all open-modal buttons
-    openModalButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
+}
+
+// Add click event to close button
+if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', closeModalFunc);
+}
+
+// Add event listeners to all open-modal buttons
+openModalButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        openModalFunc();
+    });
+});
+
+// Add click event to book now button
+const bookNowBtn = document.getElementById('book-now-btn');
+if (bookNowBtn) {
+    bookNowBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        openModalFunc();
+    });
+}
+
+// Add click events to all get started buttons
+const getStartedBtns = document.querySelectorAll('.get-started-btn');
+if (getStartedBtns) {
+    getStartedBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
             e.preventDefault();
             openModalFunc();
         });
     });
+}
 
-    const bookNowBtn = document.getElementById('book-now-btn');
-    if (bookNowBtn) {
-        bookNowBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            openModalFunc();
-        });
+// Close modal when clicking outside
+window.addEventListener('click', function(e) {
+    if (e.target === modal) {
+        closeModalFunc();
     }
+});
 
-    const getStartedBtns = document.querySelectorAll('.get-started-btn');
-    if (getStartedBtns) {
-        getStartedBtns.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                openModalFunc();
-            });
-        });
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && modal && modal.classList.contains('show')) {
+        closeModalFunc();
     }
-    
-    // Event listeners for closing modal
-    // Event listener for clicking outside the modal to close it
-    
-    window.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            closeModalFunc();
-        }
-    });
-    
-    // Escape key to close modal
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.classList.contains('show')) {
-            closeModalFunc();
-        }
+});
+
+// Booking form submission with WhatsApp
+const bookingForm = document.getElementById('booking-form');
+const whatsappSubmit = document.getElementById('whatsapp-submit');
+
+if (whatsappSubmit && bookingForm) {
+    // Prevent default form submission
+    bookingForm.addEventListener('submit', function(e) {
+        e.preventDefault();
     });
 
-    // Booking form submission with WhatsApp
-    const bookingForm = document.getElementById('booking-form');
-    const whatsappSubmit = document.getElementById('whatsapp-submit');
-    
-    // Function to remove the osadam.com popup
-    function removeOsadamPopup() {
-        // Look for the specific popup shown in the screenshot
-        const popups = document.querySelectorAll('div');
-        popups.forEach(popup => {
-            // Check if this popup matches the one in the screenshot
-            if (popup.style.position === 'fixed' && 
-                popup.textContent && 
-                popup.textContent.includes('osadam.com') && 
-                popup.textContent.includes('Please fill in all required fields')) {
-                
-                // Try to find and click the OK button
-                const buttons = popup.querySelectorAll('button');
-                if (buttons.length > 0) {
-                    // Click the OK button (usually the last button)
-                    buttons[buttons.length - 1].click();
-                } else {
-                    // If no button found, just remove the popup
-                    popup.remove();
-                }
+    // Handle WhatsApp submission
+    whatsappSubmit.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Remove any existing validation messages
+        const existingMessages = document.querySelectorAll('.validation-message');
+        existingMessages.forEach(msg => msg.remove());
+        
+        // Get form values directly from form elements
+        const fullNameInput = document.getElementById('fullName');
+        const businessNameInput = document.getElementById('businessName');
+        const websiteGoalInput = document.getElementById('websiteGoal');
+        const budgetInput = document.getElementById('budget');
+        const timelineInput = document.getElementById('timeline');
+        const messageInput = document.getElementById('message');
+
+        // Get values and trim whitespace
+        const fullName = fullNameInput?.value?.trim() || '';
+        const businessName = businessNameInput?.value?.trim() || '';
+        const websiteGoal = websiteGoalInput?.value?.trim() || '';
+        const budget = budgetInput?.value?.trim() || 'Not specified';
+        const timeline = timelineInput?.value?.trim() || '';
+        const message = messageInput?.value?.trim() || 'No additional details';
+        
+        // Debug log
+        console.log('Form Values:', {
+            fullName,
+            email,
+            businessName,
+            websiteGoal,
+            budget,
+            timeline,
+            message
+        });
+        
+        // Validate required fields
+        const requiredFields = [
+            { input: fullNameInput, value: fullName, label: 'Full Name' },
+            { input: businessNameInput, value: businessName, label: 'Business Name' },
+            { input: websiteGoalInput, value: websiteGoal, label: 'Website Goal' },
+            { input: timelineInput, value: timeline, label: 'Timeline' }
+        ];
+        
+        // Add input event listeners to all required fields
+        requiredFields.forEach(field => {
+            if (field.input) {
+                field.input.addEventListener('input', function() {
+                    if (this.value.trim()) {
+                        this.classList.remove('error');
+                    }
+                });
             }
         });
-    }
-    
-    // WhatsApp submit button
-    if (whatsappSubmit) {
-        whatsappSubmit.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Remove any existing validation messages first
+
+        // Check for missing fields
+        const missingFields = requiredFields.filter(field => {
+            const isEmpty = !field.value;
+            if (isEmpty && field.input) {
+                field.input.classList.add('error');
+            } else if (field.input) {
+                field.input.classList.remove('error');
+            }
+            return isEmpty;
+        });
+        
+        if (missingFields.length > 0) {
+            // Remove any existing validation messages
             const existingMessages = document.querySelectorAll('.validation-message');
             existingMessages.forEach(msg => msg.remove());
             
-            // Get form values and trim whitespace
-            const fullName = document.getElementById('fullName')?.value?.trim() || '';
-            const email = document.getElementById('email')?.value?.trim() || '';
-            const businessName = document.getElementById('businessName')?.value?.trim() || '';
-            const websiteGoal = document.getElementById('websiteGoal')?.value?.trim() || '';
-            const budget = document.getElementById('budget')?.value?.trim() || 'Not specified';
-            const timeline = document.getElementById('timeline')?.value?.trim() || '';
-            const message = document.getElementById('message')?.value?.trim() || 'No additional details';
+            const validationDiv = document.createElement('div');
+            validationDiv.className = 'validation-message';
+            validationDiv.innerHTML = `
+                <p>Please fill in the following required fields:</p>
+                <ul>
+                    ${missingFields.map(field => `<li>${field.label}</li>`).join('')}
+                </ul>
+            `;
+            validationDiv.style.color = '#ff3860';
+            validationDiv.style.marginBottom = '15px';
+            validationDiv.style.textAlign = 'left';
             
-            // Validate required fields
-            const requiredFields = [
-                { id: 'fullName', value: fullName, label: 'Full Name' },
-                { id: 'email', value: email, label: 'Email' },
-                { id: 'businessName', value: businessName, label: 'Business Name' },
-                { id: 'websiteGoal', value: websiteGoal, label: 'Website Goal' },
-                { id: 'timeline', value: timeline, label: 'Timeline' }
-            ];
-            
-            const missingFields = requiredFields.filter(field => !field.value);
-            
-            if (missingFields.length > 0) {
-                const validationDiv = document.createElement('div');
-                validationDiv.className = 'validation-message';
-                validationDiv.innerHTML = `
-                    <p>Please fill in the following required fields:</p>
-                    <ul>
-                        ${missingFields.map(field => `<li>${field.label}</li>`).join('')}
-                    </ul>
-                `;
-                validationDiv.style.color = '#ff3860';
-                validationDiv.style.marginBottom = '15px';
-                validationDiv.style.textAlign = 'left';
-                
-                const formButtons = document.querySelector('.form-buttons');
-                if (formButtons) {
-                    formButtons.parentNode.insertBefore(validationDiv, formButtons);
-                }
-                return;
+            const submitButtons = document.querySelector('.form-buttons');
+            if (submitButtons) {
+                submitButtons.parentNode.insertBefore(validationDiv, submitButtons);
             }
+            return;
+        }
+        
+        try {
+            // Format WhatsApp message
+            const whatsappMessage = [
+                "Hello Sarah, I'm interested in your web design services.",
+                "",
+                `Name: ${fullName}`,
+                `Business: ${businessName}`,
+                `Website Goal: ${websiteGoal}`,
+                `Budget: ${budget}`,
+                `Timeline: ${timeline}`,
+                "",
+                `Additional Details: ${message}`
+            ].join('\n');
+
+            // Show success message
+            const successDiv = document.createElement('div');
+            successDiv.className = 'validation-message success';
+            successDiv.textContent = 'Opening WhatsApp...';
+            successDiv.style.color = '#00c853';
+            successDiv.style.marginBottom = '15px';
+            successDiv.style.textAlign = 'center';
             
-            try {
-                // Format WhatsApp message with proper line breaks
-                const whatsappMessage = [
-                    "Hello Sarah, I'm interested in your web design services.",
-                    "",
-                    `Name: ${fullName}`,
-                    `Email: ${email}`,
-                    `Business: ${businessName}`,
-                    `Website Goal: ${websiteGoal}`,
-                    `Budget: ${budget}`,
-                    `Timeline: ${timeline}`,
-                    "",
-                    `Additional Details: ${message}`
-                ].join('\n');
-                
-                // Encode the message for URL
-                const encodedMessage = encodeURIComponent(whatsappMessage);
-                
-                // Open WhatsApp in new tab
-                window.open(`https://wa.me/2348084077486?text=${encodedMessage}`, '_blank');
-                
-                // Reset form and close modal
-                bookingForm.reset();
-                closeModalFunc();
-                
-            } catch (error) {
-                console.error('Error sending message:', error);
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'validation-message error';
-                errorDiv.textContent = 'Sorry, there was an error sending your message. Please try again or contact us directly.';
-                errorDiv.style.color = '#ff3860';
-                errorDiv.style.marginBottom = '15px';
-                errorDiv.style.textAlign = 'center';
-                
-                const formButtons = document.querySelector('.form-buttons');
-                if (formButtons) {
-                    formButtons.parentNode.insertBefore(errorDiv, formButtons);
-                }
+            const submitArea = document.querySelector('.form-buttons');
+            if (submitArea) {
+                submitArea.parentNode.insertBefore(successDiv, submitArea);
             }
-        });
-    }
-    
-    // Regular contact form submission
-    const contactForm = document.querySelector('.contact-form');
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            // Don't prevent default - let the form submit naturally to the mailto: handler
+
+            // Open WhatsApp
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            window.open(`https://wa.me/2348084077486?text=${encodedMessage}`, '_blank');
             
-            // Get form values for validation
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const message = document.getElementById('message').value.trim();
+            // Reset form and close modal
+            bookingForm.reset();
+            closeModalFunc();
             
-            // Validate required fields
-            if (!name || !email || !message) {
-                e.preventDefault(); // Prevent submission if validation fails
-                
-                // Remove any existing validation messages
-                const existingMessages = contactForm.querySelectorAll('.validation-message');
-                existingMessages.forEach(msg => msg.remove());
-                
-                const validationDiv = document.createElement('div');
-                validationDiv.className = 'validation-message';
+            // Remove success message after 3 seconds
+            setTimeout(() => {
+                successDiv.remove();
+            }, 3000);
+            
+        } catch (error) {
+            console.error('Error sending message:', error);
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'validation-message error';
+            errorDiv.textContent = 'Sorry, there was an error sending your message. Please try again or contact us directly.';
+            errorDiv.style.color = '#ff3860';
+            errorDiv.style.marginBottom = '15px';
+            errorDiv.style.textAlign = 'center';
+            
+            const errorArea = document.querySelector('.form-buttons');
+            if (errorArea) {
+                errorArea.parentNode.insertBefore(errorDiv, errorArea);
+            }
+        }
+    });
+}
+
+// Regular contact form submission
+const contactForm = document.querySelector('.contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+        // Get form values for validation
+        const name = document.getElementById('name')?.value?.trim() || '';
+        const email = document.getElementById('email')?.value?.trim() || '';
+        const message = document.getElementById('message')?.value?.trim() || '';
+        
+        // Validate required fields
+        if (!name || !email || !message) {
+            e.preventDefault(); // Prevent submission if validation fails
+            
+            // Remove any existing validation messages
+            const existingMessages = contactForm.querySelectorAll('.validation-message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            const validationDiv = document.createElement('div');
                 validationDiv.innerHTML = `
                     <p>Please fill in all required fields:</p>
                     <ul>

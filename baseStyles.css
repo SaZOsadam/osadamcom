@@ -119,7 +119,11 @@
 }
 
 [data-theme="dark"] .service-card::before {
-    background-color: var(--primary-color);
+    background-color: rgba(154, 255, 145, 0.12);
+}
+
+[data-theme="dark"] .service-card:hover::before {
+    height: 100%;
 }
 
 /* Enhance active elements */
@@ -673,25 +677,55 @@ nav {
     top: -9px;
     left: 12px;
     background-color: var(--bg-color);
-    padding: 0 6px;
-    border-radius: 3px;
 }
 
 .modal .form-group input:focus + label,
-.modal .form-group textarea:focus + label,
-.modal .form-group select:focus + label {
-    color: var(--primary-color);
+.modal .form-group select:focus + label,
+.modal .form-group textarea:focus + label {
+color: var(--primary-color);
+transform: translateY(-1.5rem) scale(0.8);
+background: white;
+padding: 0 0.5rem;
 }
+
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
+border-color: #ff3860;
+animation: shake 0.5s;
+}
+
+.form-group input.error + label,
+.form-group select.error + label,
+.form-group textarea.error + label {
+color: #ff3860;
+}
+
+.form-group input.error:focus,
+.form-group select.error:focus,
+.form-group textarea.error:focus {
+border-color: #ff3860;
+box-shadow: 0 0 0 2px rgba(255, 56, 96, 0.2);
+}
+
+@keyframes shake {
+0%, 100% { transform: translateX(0); }
+25% { transform: translateX(-5px); }
+75% { transform: translateX(5px); }
+}
+
 .modal input,
 .modal select,
 .modal textarea {
-    width: 100%;
-    padding: 0.6rem 0.8rem;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    font-family: inherit;
-    font-size: 0.9rem;
-    background-color: var(--input-bg);
+width: 100%;
+padding: 0.6rem 0.8rem;
+border: 1px solid var(--border-color);
+border-radius: 6px;
+font-family: inherit;
+font-size: 0.9rem;
+background-color: var(--input-bg);
+color: var(--text-color);
+transition: all 0.3s ease;
     color: var(--text-color);
     transition: all 0.3s ease;
 }
@@ -714,8 +748,38 @@ nav {
 
 .form-buttons {
     display: flex;
+    justify-content: center;
     gap: 1rem;
-    margin-top: 2.5rem;
+    margin-top: 2rem;
+}
+
+#whatsapp-submit {
+    background-color: #25d366;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+#whatsapp-submit:hover {
+    background-color: #128c7e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+}
+
+#whatsapp-submit:before {
+    content: '\f232';
+    font-family: 'FontAwesome';
+    margin-right: 8px;
 }
 
 .form-buttons .cta-button {
