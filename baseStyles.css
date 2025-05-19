@@ -106,10 +106,19 @@
 [data-theme="dark"] .modal-content,
 [data-theme="dark"] .about-content,
 [data-theme="dark"] .portfolio-grid,
-[data-theme="dark"] .process-steps {
+[data-theme="dark"] .process-steps,
+[data-theme="dark"] .hero-background{
     background-color: var(--card-bg);
     border: var(--card-border);
     box-shadow: var(--card-shadow);
+}
+
+[data-theme="dark"] .hero-background {
+    opacity: 0.1;
+}
+
+[data-theme="dark"] .hero-background .overlay {
+    opacity: 0.1;
 }
 
 [data-theme="dark"] .service-card {
@@ -496,8 +505,8 @@ nav {
 /* Hero Section */
 .hero {
     position: relative;
-    height: 100vh;
-    min-height: 600px;
+    height: 60vh;
+    min-height: 60vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -511,13 +520,13 @@ nav {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 60vh;
     z-index: -1;
 }
 
 .hero-background img {
     width: 100%;
-    height: 100%;
+    height: 60vh;
     object-fit: cover;
 }
 
@@ -526,8 +535,18 @@ nav {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8));
+    height: 60vh;
+}
+
+.hero-background .overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60vh;
+    background: linear-gradient(var(--primary-color), var(--secondary-color));
+    opacity: 0.3;
 }
 
 .hero-content {
